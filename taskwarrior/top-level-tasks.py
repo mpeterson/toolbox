@@ -21,13 +21,16 @@ def walk_up(start, end):
 
 def exists_up(start, end, path):
   for current_path in walk_up(start, end):
-     if os.path.exists(os.path.join(current_path, path)):
-       return current_path
+    if os.path.exists(os.path.join(current_path, path)):
+      return current_path
 
 if __name__ == '__main__':
   path = exists_up(os.getcwd(), TOP_DIR, ".task")
   path = path and os.path.join(path, ".task")
 
-  data_file = "rc.data.location:%s" % (path,) if path else '' 
+  command = TASK_COMMAND + sys.argv[1:]
 
-  subprocess.call(TASK_COMMAND + [data_file,] + sys.argv[1:])
+  if path:
+    command.insert(len(TASK_COMMAND), "rc.data.location:%s" % (path,))
+
+  subprocess.call(command)
